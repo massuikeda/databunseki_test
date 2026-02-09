@@ -123,6 +123,10 @@ if button_clicked:
         )
 
     fig1, ax1 = plt.subplots(figsize=(10, 6))
+
+    # 図ごとにフォントを明示的に設定
+    plt.rcParams["font.family"] = "Noto Sans CJK JP"
+    plt.rcParams["axes.unicode_minus"] = False
     ax1.scatter(
         train_data_filled[selected_data1],
         train_data_filled[selected_data2] / 100,
