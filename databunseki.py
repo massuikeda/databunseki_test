@@ -16,6 +16,7 @@ def load_font():
     font_path = "fonts/NotoSansJP-Regular.ttf"
     fm.fontManager.addfont(font_path)
     plt.rcParams["font.family"] = "Noto Sans JP"
+    return True
 
 
 load_font()
