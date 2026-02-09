@@ -13,67 +13,40 @@ import matplotlib.font_manager as fm
 import os
 
 
-# デバッグ情報を表示
-st.sidebar.title("🔍 フォントデバッグ情報")
+# matplotlibのキャッシュをクリア
+@st.cache_resource
+def setup_japanese_font():
+    """日本語フォントを設定する（キャッシュクリア付き）"""
+    # キャッシュファイルを削除
+    cache_dir = fm.get_cachedir()
+    cache_file = os.path.join(cache_dir, "fontlist-v330.json")
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
 
-# 1. フォントファイルの存在確認
-font_paths = [
-    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-    "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-    "C:\\Windows\\Fonts\\msgothic.ttc",
-]
+    # フォントマネージャーを再構築
+    fm._load_fontmanager(try_read_cache=False)
 
-st.sidebar.write("### フォントファイル確認")
-for font_path in font_paths:
-    if os.path.exists(font_path):
-        st.sidebar.success(f"✅ {font_path}")
-    else:
-        st.sidebar.error(f"❌ {font_path}")
-
-# 2. インストール済みフォント一覧
-st.sidebar.write("### 利用可能なフォント")
-available_fonts = [
-    f.name
-    for f in fm.fontManager.ttflist
-    if "CJK" in f.name or "Noto" in f.name or "Gothic" in f.name
-]
-st.sidebar.write(available_fonts[:10])  # 最初の10個を表示
-
-
-# 3. フォント設定を試行
-def set_japanese_font():
-    """日本語フォントを設定する"""
-    # Noto Sans CJK を探す
+    # Noto Sans CJK を探して設定
     for font in fm.fontManager.ttflist:
-        if "Noto Sans CJK" in font.name or "NotoSansCJK" in font.name:
+        if "Noto Sans CJK JP" in font.name:
             plt.rcParams["font.family"] = font.name
             plt.rcParams["axes.unicode_minus"] = False
-            st.sidebar.success(f"✅ 使用フォント: {font.name}")
             return True
 
-    # 見つからない場合は手動でパス指定
-    font_paths = [
-        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-    ]
+    # 見つからない場合は直接パス指定
+    font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+    if os.path.exists(font_path):
+        fm.fontManager.addfont(font_path)
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rcParams["font.family"] = font_prop.get_name()
+        plt.rcParams["axes.unicode_minus"] = False
+        return True
 
-    for font_path in font_paths:
-        if os.path.exists(font_path):
-            try:
-                fm.fontManager.addfont(font_path)
-                font_prop = fm.FontProperties(fname=font_path)
-                plt.rcParams["font.family"] = font_prop.get_name()
-                plt.rcParams["axes.unicode_minus"] = False
-                st.sidebar.success(f"✅ パスから読込: {font_path}")
-                return True
-            except Exception as e:
-                st.sidebar.error(f"エラー: {e}")
-
-    st.sidebar.warning("⚠️ 日本語フォントが見つかりません")
     return False
 
 
-set_japanese_font()
+# フォント設定を適用
+setup_japanese_font()
 
 # 現在の設定を表示
 st.sidebar.write("### 現在のmatplotlib設定")
