@@ -13,44 +13,8 @@ import matplotlib.font_manager as fm
 import os
 
 
-# matplotlibのキャッシュをクリア
-@st.cache_resource
-def setup_japanese_font():
-    """日本語フォントを設定する（キャッシュクリア付き）"""
-    # キャッシュファイルを削除
-    cache_dir = fm.get_cachedir()
-    cache_file = os.path.join(cache_dir, "fontlist-v330.json")
-    if os.path.exists(cache_file):
-        os.remove(cache_file)
-
-    # フォントマネージャーを再構築
-    fm._load_fontmanager(try_read_cache=False)
-
-    # Noto Sans CJK を探して設定
-    for font in fm.fontManager.ttflist:
-        if "Noto Sans CJK JP" in font.name:
-            plt.rcParams["font.family"] = font.name
-            plt.rcParams["axes.unicode_minus"] = False
-            return True
-
-    # 見つからない場合は直接パス指定
-    font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
-    if os.path.exists(font_path):
-        fm.fontManager.addfont(font_path)
-        font_prop = fm.FontProperties(fname=font_path)
-        plt.rcParams["font.family"] = font_prop.get_name()
-        plt.rcParams["axes.unicode_minus"] = False
-        return True
-
-    return False
-
-
-# フォント設定を適用
-setup_japanese_font()
-
-# 現在の設定を表示
-st.sidebar.write("### 現在のmatplotlib設定")
-st.sidebar.write(f"font.family: {plt.rcParams['font.family']}")
+plt.rcParams["font.family"] = "Noto Sans CJK JP"
+plt.rcParams["axes.unicode_minus"] = False
 
 st.markdown(
     """
