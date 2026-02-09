@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 
-@st.cache_resource
 def load_font():
     font_path = "fonts/NotoSansJP-Regular.ttf"
     fm.fontManager.addfont(font_path)
