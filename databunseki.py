@@ -52,7 +52,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-plt.rcParams["font.family"] = ["MS Gothic", "DejaVu Sans"]
 # csvファイルをDataFrameに格納した。
 train_data = pd.read_csv("seven_train.csv")
 
