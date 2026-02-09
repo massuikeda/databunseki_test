@@ -10,16 +10,8 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-
-
-def load_font():
-    font_path = "fonts/NotoSansJP-Regular.ttf"
-    fm.fontManager.addfont(font_path)
-    plt.rcParams["font.family"] = "Noto Sans JP"
-    return True
-
-
-load_font()
+import os
+import japanize_matplotlib
 
 st.markdown(
     """
@@ -108,21 +100,22 @@ if button_clicked:
         train_data_filled[selected_data1],
         train_data_filled[selected_data2],
     )
-    if p_value > 0 and p_value < 0.05:
-        sei = "正"
-        st.markdown(
-            f"<h3 style='text-align: center; color: blue; font-size: 1.5rem;'>統計的に有意な{sei}の相関関係が認められます</h1>",
-            unsafe_allow_html=True,
-        )
-    elif p_value < 0 and p_value > -0.05:
-        fu = "負"
-        st.markdown(
-            f"<h3 style='text-align: center; color: blue; font-size: 1.5rem;'>統計的に有意な{fu}の相関関係が認められます</h1>",
-            unsafe_allow_html=True,
-        )
+    if p_value < 0.05:
+        if correlation_stores_revenue > 0:
+            sei = "正"
+            st.markdown(
+                f"<h3 style='text-align: center; color: blue; font-size: 1.5rem;'>統計的に有意な{sei}の相関関係が認められます</h3>",
+                unsafe_allow_html=True,
+            )
+        else:
+            fu = "負"
+            st.markdown(
+                f"<h3 style='text-align: center; color: blue; font-size: 1.5rem;'>統計的に有意な{fu}の相関関係が認められます</h3>",
+                unsafe_allow_html=True,
+            )
     else:
         st.markdown(
-            "<h3 style='text-align: center; color: #e74c3c; font-size: 1.5rem;'>統計的に有意な相関関係は認められません</h1>",
+            "<h3 style='text-align: center; color: #e74c3c; font-size: 1.5rem;'>統計的に有意な相関関係は認められません</h3>",
             unsafe_allow_html=True,
         )
 
