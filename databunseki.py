@@ -8,6 +8,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import streamlit as st
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+
+@st.cache_resource
+def load_font():
+    font_path = "fonts/NotoSansJP-Regular.otf"
+    fm.fontManager.addfont(font_path)
+    plt.rcParams["font.family"] = "Noto Sans JP"
+
+
+load_font()
 
 st.markdown(
     """
