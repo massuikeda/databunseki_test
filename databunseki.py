@@ -11,7 +11,32 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import os
-import japanize_matplotlib
+
+
+def set_japanese_font():
+    """日本語フォントを設定する"""
+    font_paths = [
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",  # Streamlit Cloud
+        "C:\\Windows\\Fonts\\msgothic.ttc",  # Windows
+        "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",  # Mac
+    ]
+
+    for font_path in font_paths:
+        if os.path.exists(font_path):
+            fm.fontManager.addfont(font_path)
+            font_prop = fm.FontProperties(fname=font_path)
+            plt.rcParams["font.family"] = font_prop.get_name()
+            plt.rcParams["axes.unicode_minus"] = False
+            return True
+
+    # フォールバック
+    plt.rcParams["font.sans-serif"] = ["Noto Sans CJK JP", "DejaVu Sans"]
+    plt.rcParams["axes.unicode_minus"] = False
+    return False
+
+
+# フォント設定を適用
+set_japanese_font()
 
 st.markdown(
     """
